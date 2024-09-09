@@ -1,0 +1,75 @@
+openapi: '3.0.3'
+info:
+  title: Shopping Item Price API
+  version: '1.0'
+servers:
+  - url: https://localhost:12345/v1
+  - url: https://price.cloudsheeptech.com:12345/v1
+paths:
+  /price/{itemName}:
+    get:
+      tags:
+      - Price Handling
+      description: Receive possible prices for an item with the queried name
+      parameters:
+      - name: itemName
+        in: query
+        required: true
+        allowEmptyValue: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Price'
+        "404":
+          description: Not found
+  /price/list:
+    get:
+      tags:
+      - Price Handling
+      description: Receive the prices for all items in a list
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+                example: "apfel"
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Price'
+components:
+  schemas:
+    Price:
+      type: object
+      properties:
+        article:
+          type: string
+          example: "apfel"
+        price:
+          type: integer
+          example: 1.99
+        promotionPrice:
+          type: integer
+          example: 1.12
+        currency:
+          type: string
+          example: "€"
+        retailer:
+          type: string
+          example: "lidl"
